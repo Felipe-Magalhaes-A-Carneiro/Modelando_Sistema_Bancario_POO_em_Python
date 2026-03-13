@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from datetime import datetime
 
 class Cliente:
@@ -73,15 +73,22 @@ class ContaCorrente(Conta):
 # -----------------------------------
 
 class Historico:
-    def __init__(self, adiconar_transa= Transacao):
-        self.adiconar_transacao = adiconar_transa
+    def __init__(self, adiconar_transacao= Transacao):
+        self.adiconar_transacao = adiconar_transacao
     pass
 
 # -----------------------------------
 
 class Transacao(ABC):
-    
-    pass
+
+    @property
+    @abstractmethod
+    def valor(self):
+        pass
+
+    @abstractmethod
+    def registrar(self, conta):
+        pass
 
 # -----------------------------------
 
@@ -91,4 +98,9 @@ class Saque(Transacao):
 # -----------------------------------
 
 class Deposito(Transacao):
-    pass
+    def __init__(self, valor):
+        self._valor = valor
+    
+    @property
+    def valor(self):
+        return self._valor
