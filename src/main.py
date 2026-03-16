@@ -16,30 +16,37 @@ class Cliente:
     def listar_contas(self):
         return self.__contas
     
+    def realizar_transacao(self, conta, transacao):
+        transacao.registrar(conta)
+
 # -----------------------------------
 
 class PessoaFisica(Cliente):
     def __init__(self, nome, data_nascimento, cpf, endereco):
         super().__init__(endereco)
-        self.__nome = nome
-        self.__data_nascimento = data_nascimento
-        self.__cpf = cpf
+        self.nome = nome
+        self.data_nascimento = data_nascimento
+        self.cpf = cpf
 
 
 # -----------------------------------
 
 class Conta:
-    def __init__(self, numero, agencia, cliente, historico):
+    def __init__(self, numero, cliente):
         self.__saldo = 0.0
         self.__numero = numero
-        self.__agencia = agencia
+        self.__agencia = "0001"
         self.__cliente = cliente
-        self.__historico = []
+        self.__historico = Historico()
 
     
     @property
     def saldo(self):
         return self.__saldo
+    
+    @property
+    def historico(self):
+        return self.__historico
     
     @classmethod
     def nova_conta(cls, cliente, numero, agencia):
@@ -88,7 +95,7 @@ class Historico:
     
     def adicionar_transacao(self, transacao):
         self._transacoes.append({
-            "tipo": transacao.__classe__.__name__ ,
+            "tipo": transacao.__class__.__name__ ,
             "valor": transacao.valor,
             "data": datetime.now().strftime("%d-%m-%Y %H:%M:%S")
         })
@@ -138,3 +145,32 @@ class Deposito(Transacao):
 
         if sucesso:
             conta.historico.adicionar_transacao(self)
+
+
+# --- EXECUÇÃO ---
+
+# 1. Criando o Cliente (Pessoa Física):
+cliente_pf = PessoaFisica(nome = "Felipe", data_nascimento= "01-01-1992",  cpf = "32145678978", endereco = "Rua dos Códigos")
+
+# 2. Criando a Conta Corrente e vinculando ao cliente:
+conta = ContaCorrente(numero = 1, cliente =  cliente_pf)
+cliente_pf.adicionar_conta(conta)
+
+# 3. Ralizando Depósito:
+deposito = Deposito(1000.0)
+cliente_pf.realizar_transacao(conta, deposito)
+
+# 4. Realizando um Saque:
+saque = Saque(250.0)
+cliente_pf.realizar_transacao(conta, saque)
+
+# 5. Exibindo o resultado final:
+print(f"""
+Cliente: {cliente_pf.nome}
+
+Saldo Atual: R${conta.saldo:.2f}
+
+---> Extrato:
+""")
+for alteracao in conta.historico.transacoes:
+    print(f"- {alteracao["tipo"]}: R$ {alteracao["valor"]} em {alteracao["data"]}")
