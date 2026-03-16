@@ -19,12 +19,12 @@ class Cliente:
 # -----------------------------------
 
 class PessoaFisica(Cliente):
-    def __init__(self, endereco, cpf, nome):
+    def __init__(self, nome, data_nascimento, cpf, endereco):
         super().__init__(endereco)
-        self.__cpf = cpf
         self.__nome = nome
-        self.__data_nascimento = datetime
-    pass
+        self.__data_nascimento = data_nascimento
+        self.__cpf = cpf
+
 
 # -----------------------------------
 
@@ -64,10 +64,16 @@ class Conta:
     
 
 class ContaCorrente(Conta):
-    def __init__(self, saldo, numero, agencia, Cliente, Historico, limite, limite_saques):
-        super().__init__(saldo, numero, agencia, Cliente, Historico)
-        self.__limite = limite
-        self.__limite_saques = limite_saques
+    def __init__(self, numero, cliente, limite = 500, limite_saques = 3):
+        super().__init__(numero, cliente)
+        self.limite = limite
+        self.limite_saques = limite_saques
+
+        # Sobrescreve o método sacar para incluir regras de limite de cheque especial:
+
+        def sacar(self, valor):
+            # Limite e número de saques
+            return super().sacar(valor)
     pass
     
 # -----------------------------------
