@@ -11,7 +11,7 @@ class Cliente:
     # atributos
     def adicionar_conta(self, conta):
         self.__contas.append(conta)
-        print("Conta adicionada ao cliente com sucesso!")
+        print("\nonta adicionada ao cliente com sucesso!")
 
     def listar_contas(self):
         return self.__contas
@@ -55,15 +55,15 @@ class Conta:
     def sacar(self, valor):
         if valor > 0 and valor <= self.__saldo:
             self.__saldo -= valor
-            print(f"Saque de R${valor} realizado.")
+            print(f"\nSaque de R${valor} realizado.")
             return True
-        print("Saldo insuficiente ou valor inválido.")
+        print("\nSaldo insuficiente ou valor inválido.")
         return False
     
     def depositar(self, valor):
         if valor > 0:
             self.__saldo += valor
-            print(f"Depósito de R${valor} realizado.")
+            print(f"\nDepósito de R${valor} realizado.")
             return True
         return False
     
@@ -86,19 +86,37 @@ class ContaCorrente(Conta):
 # -----------------------------------
 
 class Historico:
-    def __init__(self):
+    def __init__(self, arquivo = "historico.txt"):
+        self.arquivo = arquivo
         self._transacoes = []
 
     @property
     def transacoes(self):
         return self._transacoes
     
+    # Persistência de Dados em .txt
+    def _carregar_do_disco(self):
+        try:
+            with open(self.arquivo, "alteracao") as f:
+                return [linha.strip() for linha in f.readlines()]
+        except FileNotFoundError:
+            return []
+    
+    # def adicionar_transacao(self, transacao):
+    #     self._transacoes.append({
+    #         "tipo": transacao.__class__.__name__ ,
+    #         "valor": transacao.valor,
+    #         "data": datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+    #     })
+
     def adicionar_transacao(self, transacao):
-        self._transacoes.append({
-            "tipo": transacao.__class__.__name__ ,
-            "valor": transacao.valor,
-            "data": datetime.now().strftime("%d-%m-%Y %H:%M:%S")
-        })
+        data_hora = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+        registro = f"{data_hora} - {transacao.__class__.__name__}: R${transacao.valor:.2f}"
+
+        self._transacoes.append(registro)
+
+        with open(self.arquivo, "a") as f:
+            f.write(registro + "\n")
 
 # -----------------------------------
 
@@ -161,7 +179,7 @@ deposito = Deposito(1000.0)
 cliente_pf.realizar_transacao(conta, deposito)
 
 # 4. Realizando um Saque:
-saque = Saque(250.0)
+saque = Saque(50.0)
 cliente_pf.realizar_transacao(conta, saque)
 
 # 5. Exibindo o resultado final:
@@ -172,5 +190,5 @@ Saldo Atual: R${conta.saldo:.2f}
 
 ---> Extrato:
 """)
-for alteracao in conta.historico.transacoes:
-    print(f"- {alteracao["tipo"]}: R$ {alteracao["valor"]} em {alteracao["data"]}")
+# for alteracao in conta.historico.transacoes:
+#     print(f"- {alteracao["tipo"]}: R$ {alteracao["valor"]} em {alteracao["data"]}")
