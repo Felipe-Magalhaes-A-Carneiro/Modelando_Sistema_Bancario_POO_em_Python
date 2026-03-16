@@ -73,9 +73,19 @@ class ContaCorrente(Conta):
 # -----------------------------------
 
 class Historico:
-    def __init__(self, adiconar_transacao= Transacao):
-        self.adiconar_transacao = adiconar_transacao
-    pass
+    def __init__(self):
+        self._transacoes = []
+
+    @property
+    def transacoes(self):
+        return self._transacoes
+    
+    def adicionar_transacao(self, transacao):
+        self._transacoes.append({
+            "tipo": transacao.__classe__.__name__ ,
+            "valor": transacao.valor,
+            "data": datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+        })
 
 # -----------------------------------
 
@@ -93,7 +103,19 @@ class Transacao(ABC):
 # -----------------------------------
 
 class Saque(Transacao):
-    pass
+    
+    def __init__(self, valor):
+        self._valor = valor
+
+    @property
+    def valor(self):
+        return self._valor
+
+    def registrar(self, conta):
+        sucesso = conta.sacar(self.valor)
+
+        if sucesso:
+            conta.historico.adicionar_transacao(self)
 
 # -----------------------------------
 
@@ -104,3 +126,9 @@ class Deposito(Transacao):
     @property
     def valor(self):
         return self._valor
+    
+    def registrar(self, conta):
+        sucesso = conta.depositar(self.valor)
+
+        if sucesso:
+            conta.historico.adicionar_transacao(self)
