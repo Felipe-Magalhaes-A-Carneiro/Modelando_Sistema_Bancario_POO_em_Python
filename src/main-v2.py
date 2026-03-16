@@ -1,6 +1,11 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
 
+# VERSÃO 2 = Utilizando INPUTS
+
+clientes = []
+contas = []
+
 class Cliente:
     # caracteristicas
     #contrutor inicializador:
@@ -28,6 +33,18 @@ class PessoaFisica(Cliente):
         self.data_nascimento = data_nascimento
         self.cpf = cpf
 
+# -----------------------------------
+
+    def criar_cliente(clientes):
+        cpf = input("Informe o seu CPF (somente números):")
+
+        if cpf in clientes:
+            print("\n Atenção: Já existe cliente com esse CPF!")
+            return
+        
+        nome = input("\nInforme o seu nome completo:")
+        data_nascimento = input("Informe a data de nascimento (dd-mm-aaaa)")
+        endereco = input("Informe o endereço: ")
 
 # -----------------------------------
 
@@ -168,23 +185,23 @@ class Deposito(Transacao):
 # --- EXECUÇÃO ---
 
 # 1. Criando o Cliente (Pessoa Física):
-cliente_pf = PessoaFisica(nome = "Felipe", data_nascimento= "01-01-1992",  cpf = "32145678978", endereco = "Rua dos Códigos")
+novo_cliente = PessoaFisica(nome = nome, data_nascimento= data_nascimento,  cpf = cpf, endereco = endereco)
 
 # 2. Criando a Conta Corrente e vinculando ao cliente:
-conta = ContaCorrente(numero = 1, cliente =  cliente_pf)
-cliente_pf.adicionar_conta(conta)
+conta = ContaCorrente(numero = 1, cliente =  novo_cliente )
+novo_cliente .adicionar_conta(conta)
 
 # 3. Ralizando Depósito:
 deposito = Deposito(1000.0)
-cliente_pf.realizar_transacao(conta, deposito)
+novo_cliente .realizar_transacao(conta, deposito)
 
 # 4. Realizando um Saque:
 saque = Saque(55.0)
-cliente_pf.realizar_transacao(conta, saque)
+novo_cliente .realizar_transacao(conta, saque)
 
 # 5. Exibindo o resultado final:
 print(f"""
-Cliente: {cliente_pf.nome}
+Cliente: {novo_cliente.nome}
 
 Saldo Atual: R${conta.saldo:.2f}
 
