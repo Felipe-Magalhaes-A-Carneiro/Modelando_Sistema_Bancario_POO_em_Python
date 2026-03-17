@@ -31,26 +31,6 @@ class PessoaFisica(Cliente):
 
 # -----------------------------------
 
-    def criar_cliente(clientes):
-        cpf = input("Informe o seu CPF (somente números):")
-
-        if cpf in clientes:
-            print("\n Atenção: Já existe cliente com esse CPF!")
-            return
-        
-        nome = input("\nInforme o seu nome completo:")
-        data_nascimento = input("Informe a data de nascimento (dd-mm-aaaa)")
-        endereco = input("Informe o endereço: ")
-
-        # Criamos o objeto usando as variáveis que acabamos de preencher
-        novo_cliente = PessoaFisica(nome=nome, data_nascimento=data_nascimento, cpf=cpf, endereco=endereco)
-        
-        # Guardamos na lista
-        clientes.append(novo_cliente)
-        print("\n=== Cliente criado com sucesso! ===")
-
-# -----------------------------------
-
 class Conta:
     def __init__(self, numero, cliente):
         self.__saldo = 0.0
@@ -162,3 +142,26 @@ class Deposito(Transacao):
 
 
 # ---------------- FUNÇÕES DO SISMTE MENU -------------------
+
+def filtrar_cliente(cpf, clientes):
+    
+    clientes_filtrados = [cliente for cliente in clientes if cliente.cpf == cpf]
+    return clientes_filtrados[0] if clientes_filtrados else None
+
+def criar_cliente(clientes):
+    cpf = input("Informe o seu CPF (somente números):")
+
+    if filtrar_cliente(cpf, clientes):
+        print("\n Atenção: Já existe cliente com esse CPF!")
+        return
+    
+    nome = input("\nInforme o seu nome completo:")
+    data_nascimento = input("Informe a data de nascimento (dd-mm-aaaa)")
+    endereco = input("Informe o endereço: ")
+
+    # Criamos o objeto usando as variáveis que acabamos de preencher
+    novo_cliente = PessoaFisica(nome=nome, data_nascimento=data_nascimento, cpf=cpf, endereco=endereco)
+    
+    # Guardamos na lista
+    clientes.append(novo_cliente)
+    print("\n=== Cliente criado com sucesso! ===")
