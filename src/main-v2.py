@@ -180,3 +180,19 @@ def criar_conta(numero_conta, clientes, contas):
     cliente.adicionar_conta(conta)
     print(">>> Conta criada com sucesso!")
 
+def realizar_operacao(clientes, tipo_transacao):
+    cpf = input("Digite o seu CPF: ")
+    cliente = filtrar_cliente(cpf, clientes)
+
+    if not cliente:
+        print(">>> Cliente não encontrado!")
+        return
+    
+    valor = float(input("Informe o valor do {tipo_transacao}"))
+    transacao = Deposito(valor) if tipo_transacao == "Depósito" else Saque(valor)
+
+    if not cliente.contas:
+        print(">>> Cliente não possui conta!")
+        return
+    
+    cliente.realizar_transacao(cliente.contas[0], transacao)
