@@ -196,3 +196,58 @@ def realizar_operacao(clientes, tipo_transacao):
         return
     
     cliente.realizar_transacao(cliente.contas[0], transacao)
+
+
+# --------------------------- MENU PRINCIPAL ---------------------------
+
+def menu():
+    return """
+================ MENU ================
+[1] Depositar
+[2] Sacar
+[3] Extrato
+[4] Novo Usuário
+[5] Nova Conta
+[0] Sair
+=> """
+
+
+def main():
+    cliente = []
+    contas = []
+
+    while True:
+        opcao = input(menu())
+
+        if opcao == "1":
+            realizar_operacao(clientes, "Deposito")
+        
+        elif opcao == "2":
+            realizar_operacao(clientes, "Saque")
+
+        elif opcao == "3":
+            cpf = input("Informe o seu CPF: ")
+
+            if cliente and cliente.conta:
+                print("\n================= EXTRATO =================")
+
+                for t in cliente.contas[0].historico._transacoes:
+                    print(t)
+                
+                print(f"\n>>> Saldo: R$ {cliente.contas[0].saldo:.2f}")
+
+            else:
+                print("\n>>> Conta não encontrada! ")
+        
+        elif opcao == "4":
+            criar_cliente(clientes)
+
+        elif opcao == "5":
+            numero_conta = len(contas) + 1
+            criar_conta(numero_conta, clientes, contas)
+        
+        elif opcao == "0":
+            break
+        
+        else:
+            print(">>> Operação inválida! <<<")
