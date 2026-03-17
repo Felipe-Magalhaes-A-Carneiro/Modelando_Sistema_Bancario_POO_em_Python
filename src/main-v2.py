@@ -160,8 +160,23 @@ def criar_cliente(clientes):
     endereco = input("Informe o endereço: ")
 
     # Criamos o objeto usando as variáveis que acabamos de preencher
-    novo_cliente = PessoaFisica(nome=nome, data_nascimento=data_nascimento, cpf=cpf, endereco=endereco)
+    cliente = PessoaFisica(nome=nome, data_nascimento=data_nascimento, cpf=cpf, endereco=endereco)
     
     # Guardamos na lista
-    clientes.append(novo_cliente)
+    clientes.append(cliente)
     print("\n=== Cliente criado com sucesso! ===")
+
+def criar_conta(numero_conta, clientes, contas):
+
+    cpf = input("Digite o seu CPF: ")
+    cliente = filtrar_cliente(cpf, clientes)
+
+    if not cliente:
+        print(">>> Cliente não encontrado!")
+        return
+    
+    conta = ContaCorrente(numero= numero_conta, cliente= cliente)
+    contas.append(conta)
+    cliente.adicionar_conta(conta)
+    print(">>> Conta criada com sucesso!")
+
