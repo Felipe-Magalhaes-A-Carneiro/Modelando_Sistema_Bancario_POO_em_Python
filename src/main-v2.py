@@ -91,13 +91,15 @@ class Historico:
         return self._transacoes
 
     def adicionar_transacao(self, transacao):
-
-        registro = f"{datetime.now().strftime("%d-%m-%Y %H:%M:%S")} - {transacao.__class__.__name__}: R${transacao.valor:.2f}"
-
+        registro = f"{datetime.now().strftime('%d-%m-%Y %H:%M:%S')} - {transacao.__class__.__name__}: R${transacao.valor:.2f}"
+        
         self._transacoes.append(registro)
 
-        with open(self.arquivo, "a") as f:
-            f.write(registro + "\n")
+        try:
+            with open(self.arquivo, "a", encoding="utf-8") as f:
+                f.write(registro + "\n")
+        except Exception as e:
+            print(f"Erro ao salvar no arquivo: {e}")
 
 # -----------------------------------
 
@@ -196,14 +198,25 @@ def realizar_operacao(clientes, tipo_transacao):
     if not cliente:
         print(">>> Cliente não encontrado!")
         return
-    
-    valor = float(input(f"Informe o valor do {tipo_transacao}: "))
-    transacao = Deposito(valor) if tipo_transacao == "Deposito" else Saque(valor)
 
-    if not cliente:
-        print(">>> Cliente não possui conta!")
+    if not cliente.contas:
+        print(">>> Este cliente ainda não possui uma conta vinculada! Vá na opção [5].")
         return
     
+    try:
+        valor = float(input(f"Informe o valor do {tipo_transacao}: "))
+
+    except ValueError:
+        print(">>> Valor inválido! Digite apenas números.")
+    
+    if tipo_transacao.upper() == "DEPOSITO":
+        transacao = Deposito(valor)
+
+    else:
+        transacao = Saque(valor)
+
+
+    conta_atual = cliente.contas[0]
     cliente.realizar_transacao(cliente.contas[0], transacao)
 
 
@@ -260,6 +273,7 @@ def main():
             criar_conta(numero_conta, clientes, contas)
         
         elif opcao == "0":
+            print("Saindo do Sistema Bancario. Obrigado e volte sempre!")
             break
         
         else:
