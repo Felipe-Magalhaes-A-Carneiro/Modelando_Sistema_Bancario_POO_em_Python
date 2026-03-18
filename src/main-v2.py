@@ -149,11 +149,12 @@ def filtrar_cliente(cpf, clientes):
     return clientes_filtrados[0] if clientes_filtrados else None
 
 def criar_cliente(clientes):
-    cpf = input("Informe o seu CPF (somente números):")
+    print(">>> Adicionando um novo cliente...")
+    cpf = input("Informe o seu CPF (somente números): ")
 
     if filtrar_cliente(cpf, clientes):
         print("\n Atenção: Já existe cliente com esse CPF!")
-        print("\n>>> Retornando para o Menu...")
+        print("\n>>> Retornando para o Menu Principal...")
         return
     
     nome = input("\n--- Informe o seu nome completo: ")
@@ -165,11 +166,14 @@ def criar_cliente(clientes):
     
     # Guardamos na lista
     clientes.append(cliente)
-    print("\n=== Cliente criado com sucesso! ===")
+    print(f"""\n=== Cliente criado com sucesso. ===
+          
+    >>> Seja bem-vindo(a), {nome}! """)
 
 def criar_conta(numero_conta, clientes, contas):
+    print(">>> Adicionando uma nova conta...")
 
-    cpf = input("Digite o seu CPF: ")
+    cpf = input("Digite o seu CPF (somente números): ")
     cliente = filtrar_cliente(cpf, clientes)
 
     if not cliente:
@@ -189,7 +193,7 @@ def realizar_operacao(clientes, tipo_transacao):
         print(">>> Cliente não encontrado!")
         return
     
-    valor = float(input(f"Informe o valor do {tipo_transacao}"))
+    valor = float(input(f"Informe o valor do {tipo_transacao}: "))
     transacao = Deposito(valor) if tipo_transacao == "Depósito" else Saque(valor)
 
     if not cliente.contas:
@@ -204,14 +208,17 @@ def realizar_operacao(clientes, tipo_transacao):
 def menu():
     return """
 ================ MENU ================
+
 [1] Depositar
 [2] Sacar
 [3] Extrato
-[4] Novo Usuário
+[4] Novo Cliente
 [5] Nova Conta
 [0] Sair
-=> """
 
+======================================
+=> 
+"""
 
 def main():
     clientes = []
