@@ -153,11 +153,12 @@ def criar_cliente(clientes):
 
     if filtrar_cliente(cpf, clientes):
         print("\n Atenção: Já existe cliente com esse CPF!")
+        print("\n>>> Retornando para o Menu...")
         return
     
-    nome = input("\nInforme o seu nome completo:")
-    data_nascimento = input("Informe a data de nascimento (dd-mm-aaaa)")
-    endereco = input("Informe o endereço: ")
+    nome = input("\n--- Informe o seu nome completo: ")
+    data_nascimento = input("\n--- Informe a data de nascimento (dd-mm-aaaa): ")
+    endereco = input("\n--- Informe o endereço: ")
 
     # Criamos o objeto usando as variáveis que acabamos de preencher
     cliente = PessoaFisica(nome=nome, data_nascimento=data_nascimento, cpf=cpf, endereco=endereco)
@@ -172,7 +173,7 @@ def criar_conta(numero_conta, clientes, contas):
     cliente = filtrar_cliente(cpf, clientes)
 
     if not cliente:
-        print(">>> Cliente não encontrado!")
+        print(">>> Cliente com este CPF não encontrado!")
         return
     
     conta = ContaCorrente(numero= numero_conta, cliente= cliente)
@@ -181,14 +182,14 @@ def criar_conta(numero_conta, clientes, contas):
     print(">>> Conta criada com sucesso!")
 
 def realizar_operacao(clientes, tipo_transacao):
-    cpf = input("Digite o seu CPF: ")
+    cpf = input("Digite o seu CPF(somente números): ")
     cliente = filtrar_cliente(cpf, clientes)
 
     if not cliente:
         print(">>> Cliente não encontrado!")
         return
     
-    valor = float(input("Informe o valor do {tipo_transacao}"))
+    valor = float(input(f"Informe o valor do {tipo_transacao}"))
     transacao = Deposito(valor) if tipo_transacao == "Depósito" else Saque(valor)
 
     if not cliente.contas:
@@ -213,7 +214,7 @@ def menu():
 
 
 def main():
-    cliente = []
+    clientes = []
     contas = []
 
     while True:
@@ -227,6 +228,7 @@ def main():
 
         elif opcao == "3":
             cpf = input("Informe o seu CPF: ")
+            cliente = filtrar_cliente(cpf, clientes)
 
             if cliente and cliente.conta:
                 print("\n================= EXTRATO =================")
@@ -251,3 +253,5 @@ def main():
         
         else:
             print(">>> Operação inválida! <<<")
+
+main()
