@@ -7,12 +7,16 @@ class Cliente:
     # caracteristicas
     #contrutor inicializador:
     def __init__(self, endereco):
-        self.__endereco = endereco
-        self.__contas = []
+        self._endereco = endereco
+        self._contas = []
 
     # atributos
     def adicionar_conta(self, conta):
         self.__contas.append(conta)
+    
+    @property
+    def contas(self):
+        return self._contas
 
     def listar_contas(self):
         return self.__contas
@@ -194,7 +198,7 @@ def realizar_operacao(clientes, tipo_transacao):
         return
     
     valor = float(input(f"Informe o valor do {tipo_transacao}: "))
-    transacao = Deposito(valor) if tipo_transacao == "Depósito" else Saque(valor)
+    transacao = Deposito(valor) if tipo_transacao == "Deposito" else Saque(valor)
 
     if not cliente.contas:
         print(">>> Cliente não possui conta!")
@@ -237,7 +241,7 @@ def main():
             cpf = input("Informe o seu CPF: ")
             cliente = filtrar_cliente(cpf, clientes)
 
-            if cliente and cliente.conta:
+            if cliente and cliente.contas:
                 print("\n================= EXTRATO =================")
 
                 for t in cliente.contas[0].historico._transacoes:
