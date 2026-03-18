@@ -12,14 +12,14 @@ class Cliente:
 
     # atributos
     def adicionar_conta(self, conta):
-        self.__contas.append(conta)
+        self._contas.append(conta)
     
     @property
     def contas(self):
         return self._contas
 
     def listar_contas(self):
-        return self.__contas
+        return self._contas
     
     def realizar_transacao(self, conta, transacao):
         transacao.registrar(conta)
@@ -200,7 +200,7 @@ def realizar_operacao(clientes, tipo_transacao):
     valor = float(input(f"Informe o valor do {tipo_transacao}: "))
     transacao = Deposito(valor) if tipo_transacao == "Deposito" else Saque(valor)
 
-    if not cliente.contas:
+    if not cliente:
         print(">>> Cliente não possui conta!")
         return
     
@@ -244,7 +244,7 @@ def main():
             if cliente and cliente.contas:
                 print("\n================= EXTRATO =================")
 
-                for t in cliente.contas[0].historico._transacoes:
+                for t in cliente.contas[0].historico.transacoes:
                     print(t)
                 
                 print(f"\n>>> Saldo: R$ {cliente.contas[0].saldo:.2f}")
